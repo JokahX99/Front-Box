@@ -1,0 +1,16 @@
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .checkbox {
+    --border-radius: 50%; /* Asegúrate de que el checkbox sea redondeado */
+  }
+  
+  .checkbox-label {
+    font-size: 16px;
+  }
+

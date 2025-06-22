@@ -1,0 +1,117 @@
+<ion-menu contentId="main-content" side="start" menuId="main-menu">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Bodega Sin Nombre</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-list>
+      <ion-item button (click)="crearprod()">
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        Añadir Objeto
+      </ion-item>
+      <ion-item button (click)="registrarventa()">
+        <ion-icon name="wallet-outline" slot="start"></ion-icon>
+        Registrar Venta
+      </ion-item>
+      <ion-item button (click)="historialventa()">
+        <ion-icon name="time-outline" slot="start"></ion-icon>
+        Historial de Ventas
+      </ion-item>
+      <ion-item button (click)="estadisticas()">
+        <ion-icon name="stats-chart-outline" slot="start"></ion-icon>
+        Estadisticas
+      </ion-item>
+      <ion-item button (click)="ajustes()">
+        <ion-icon name="settings-outline" slot="start"></ion-icon>
+        Ajustes
+      </ion-item>
+      <ion-item button (click)="cerrarsesion()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar sesión
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<!-- Contenido principal -->
+<div class="ion-page" id="main-content">
+  <app-base1 title="Inicio"></app-base1>
+    <!-- Aquí invocas el componente Base1 -->
+
+    <!-- Barra de búsqueda -->
+    <!-- Barra de búsqueda -->
+<ion-toolbar>
+  <ion-searchbar (ionInput)="filtrarProductos($event)" placeholder="Buscar producto..."></ion-searchbar>
+
+  <ion-buttons slot="end">
+    <ion-button (click)="toggleFiltro()">
+      <ion-icon [name]="filtroActivo ? 'close-outline' : 'filter-outline'" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+</ion-toolbar>
+
+<!-- Fondo oscuro al mostrar el menú -->
+<div class="filtro-overlay" *ngIf="mostrarFiltros" (click)="toggleFiltro()"></div>
+
+<!-- Menú de filtros compacto con animación -->
+<div *ngIf="mostrarFiltros" class="menu-filtro animate-in">
+  <ion-list lines="none">
+    <ion-item button (click)="aplicarFiltro('stockMayor')">
+      <ion-label>Mayor Stock</ion-label>
+    </ion-item>
+    <ion-item button (click)="aplicarFiltro('stockMenor')">
+      <ion-label>Menor Stock</ion-label>
+    </ion-item>
+    <ion-item button (click)="aplicarFiltro('precioMayor')">
+      <ion-label>Mayor Precio</ion-label>
+    </ion-item>
+    <ion-item button (click)="aplicarFiltro('precioMenor')">
+      <ion-label>Menor Precio</ion-label>
+    </ion-item>
+  </ion-list>
+</div>
+
+
+  
+  <ion-content [fullscreen]="true" class="fondocarton">
+    
+    <!-- Productos -->
+    <div class="invflex">
+      <ion-card class="fondocarton" *ngFor="let producto of productosFiltrados">
+        <ion-row>
+          <!-- Columna para la imagen -->
+          <ion-col size="4" class="image-column">
+            <img
+              alt="Producto"
+              [src]="getImages(producto) | imageProduct"
+              (click)="VerProducto(producto)"
+            />
+          </ion-col>
+
+          <!-- Columna para el contenido -->
+          <ion-col
+            size="8"
+            class="content-column"
+            style="position: relative"
+            (click)="VerProducto(producto)"
+          >
+            <ion-card-header>
+              <ion-card-title>{{producto.nombre}}</ion-card-title>
+              <ion-card-subtitle>Stock: {{producto.stock}}</ion-card-subtitle>
+              <ion-card-subtitle>Precio: {{ producto.precio | currency:'CLP ':'symbol':'1.0-0' }}</ion-card-subtitle>
+            </ion-card-header>
+          </ion-col>
+          <ion-button
+            fill="clear"
+            size="medium"
+            style="position: absolute; top: 20; right: 0"
+            (click)="presentActionSheet(producto)"
+          >
+            <ion-icon name="ellipsis-vertical" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-row>
+      </ion-card>
+    </div>
+  </ion-content>
+</div>

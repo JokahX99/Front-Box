@@ -1,0 +1,68 @@
+<div class="ion-page" id="main-content">
+   <!-- HEADER -->
+    <ion-header>
+      <ion-toolbar color="primary">
+        <img
+          src="assets/images/LogoBoxi.png"
+          alt="Logo"
+          style="width: 100px; height: auto"
+        />
+        <ion-buttons slot="end">
+          <ion-button (click)="goBack()">
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+  <ion-content [fullscreen]="true">
+   
+
+    <!-- BANNER DE IMAGENES -->
+    <div
+  class="banner2"
+  (touchstart)="startTouch($event)"
+  (touchmove)="moveTouch($event)"
+  (touchend)="endTouch($event)"
+>
+  <img
+    class="slide current"
+    [src]="producto?.images[currentImageIndex] | imageProduct"
+    alt="{{ producto?.nombre }}"
+    [style.transform]="currentTransform"
+    [style.transition]="imageTransition"
+  />
+  <img
+    class="slide next"
+    *ngIf="nextImageIndex !== null"
+    [src]="producto?.images[nextImageIndex] | imageProduct"
+    alt="{{ producto?.nombre }}"
+    [style.transform]="nextTransform"
+    [style.transition]="imageTransition"
+  />
+</div>
+
+
+    <!-- INDICADORES DE IMAGEN -->
+    <div class="image-indicators" *ngIf="producto?.images?.length > 1">
+      <div
+        class="dot"
+        *ngFor="let img of producto.images; let i = index"
+        [class.active]="i === currentImageIndex"
+      ></div>
+    </div>
+
+    <!-- INFORMACIÓN DEL PRODUCTO -->
+    <div class="prodtitle fondocarton">
+      <h3>{{ producto?.nombre }}</h3>
+      <h5>{{ producto?.descripcion }}</h5>
+    </div>
+
+    <div class="prodbody fondocarton">
+      <h3>Detalles del Producto</h3>
+      <h5>Precio del objeto: {{ producto?.precio | currency:'CLP' }}</h5>
+      <h5>Cantidad restante: {{ producto?.stock }}</h5>
+      <h5>Fecha de Creación: {{ producto?.createdAt | date:'dd/MM/yyyy' }}</h5>
+      <h5>Última Modificación: {{ producto?.updatedAt | date:'dd/MM/yyyy' }}</h5>
+    </div>
+  </ion-content>
+</div>

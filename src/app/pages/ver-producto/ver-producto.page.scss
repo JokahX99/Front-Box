@@ -1,0 +1,88 @@
+.prodtitle{
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid;
+    border-color: #afa47e;
+    padding: 20px;
+}
+
+.prodbody{
+    margin: 10px;
+    display: flex;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid;
+    border-color: #afa47e;
+    padding: 20px;
+}
+
+.image-indicators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #bbb;
+  transition: background-color 0.3s ease;
+}
+
+.dot.active {
+  background-color: #eeb508;
+}
+
+.banner2 {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 300px; /* ajusta según diseño */
+}
+
+.banner2 img.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  touch-action: none;
+  will-change: transform;
+  mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+}
+
+.banner2 img.next {
+  /* empieza fuera del banner a la derecha */
+  transform: translateX(100%);
+}
+
+.product-info-container {
+  position: relative;
+  overflow: hidden;
+  will-change: transform, opacity;
+  /* El fondo y estilo que quieras, por ejemplo: */
+  padding: 1rem;
+}
+
+.product-slider {
+  width: 100vw;
+  height: 100%;
+  overflow: hidden;
+  /* flex vertical para el contenido */
+  display: flex;
+  flex-direction: column;
+}

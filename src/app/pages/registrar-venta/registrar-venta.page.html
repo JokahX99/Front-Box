@@ -1,0 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registrar Venta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="ventaForm">
+
+    <!-- FECHA DE VENTA -->
+    <ion-item button (click)="toggleCalendario()">
+      <ion-label>Fecha</ion-label>
+      <ion-text>{{ ventaForm.value.fecha || 'Seleccionar fecha' }}</ion-text>
+    </ion-item>
+
+    <ng-container *ngIf="mostrarCalendario">
+      <ion-datetime
+        presentation="date"
+        (ionCancel)="cerrarCalendario()"
+        (ionConfirm)="seleccionarFecha($event)"
+        [max]="today"
+      ></ion-datetime>
+    </ng-container>
+
+    <!-- BUSCADOR DE PRODUCTOS -->
+    <ion-item>
+      <ion-input
+        name="busqueda"
+        placeholder="Buscar producto"
+        [(ngModel)]="busqueda"
+        [ngModelOptions]="{ standalone: true }"
+        (ngModelChange)="filtrarProductos($event)"
+        [clearInput]="true"
+      ></ion-input>
+    </ion-item>
+
+    <ion-list *ngIf="productosFiltrados.length && busqueda">
+      <ion-item
+        button
+        *ngFor="let producto of productosFiltrados"
+        (click)="agregarProducto(producto)"
+      >
+        {{ producto.nombre }}
+      </ion-item>
+    </ion-list>
+  </form>
+
+  <!-- LISTA DE PRODUCTOS SELECCIONADOS -->
+  <div *ngFor="let item of productosVenta; let i = index" class="producto-box">
+    <div class="producto-header">
+      <div>{{ item.nombre }}</div>
+      <div class="cantidad-control">
+        <span>Cantidad: {{ item.cantidad }}</span>
+        <ion-button size="small" fill="clear" (click)="incrementarCantidad(i)">+</ion-button>
+        <ion-button size="small" fill="clear" (click)="disminuirCantidad(i)">−</ion-button>
+        <ion-button size="small" color="danger" fill="clear" (click)="eliminarProducto(i)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESUMEN DE TOTALES -->
+  <ion-card *ngIf="productosVenta.length">
+    <ion-card-header>
+      <ion-card-title>Resumen</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-label>Subtotal</ion-label>
+        <ion-text>${{ subMonto }}</ion-text>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>IVA (19%)</ion-label>
+        <ion-text>${{ iva }}</ion-text>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label><strong>Total</strong></ion-label>
+        <ion-text><strong>${{ montoTotal }}</strong></ion-text>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- BOTÓN REGISTRAR VENTA -->
+  <ion-button expand="block" class="ion-margin-top" (click)="registrarVenta()">
+    Registrar Venta
+  </ion-button>
+</ion-content>

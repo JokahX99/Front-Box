@@ -1,0 +1,43 @@
+<ion-content [fullscreen]="true">
+  <div class="banner">
+    <img
+      src="assets/images/LogoBoxi.png"
+      alt="Description of the image"
+      style="width: 200px; height: auto"
+    />
+  </div>
+
+  <div class="input-wrapper">
+    <h1>Inicio de Sesión</h1>
+
+    <form [formGroup]="loginForm">
+      <ion-input
+        class="inputfield1"
+        labelPlacement="floating"
+        fill="outline"
+        type="email"
+        formControlName="email"
+      >
+        <div slot="label">Email</div>
+      </ion-input>
+
+      <ion-input
+        class="inputfield1"
+        labelPlacement="floating"
+        fill="outline"
+        type="password"
+        style="margin-bottom: 20px"
+        formControlName="password"
+      >
+        <div slot="label">Contraseña</div>
+      </ion-input>
+    </form>
+
+    <ion-button (click)="onSubmit()" style="margin-bottom: 20px"
+      >Ingresar</ion-button
+    >
+
+    <p>No tienes una cuenta? <a (click)="Register()">Regístrate Aquí.</a></p>
+    <p>¿Olvidaste tu contraseña? <a>Recupera tu contraseña.</a></p>
+  </div>
+</ion-content>

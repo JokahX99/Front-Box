@@ -1,0 +1,142 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+// @import "@ionic/angular/css/palettes/dark.system.css";
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+
+.inputfield1 {
+    width: 100%;
+    max-width: 400px;
+    --border-radius: 12px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    margin-bottom: 10px; /* Reduced margin-bottom to prevent excessive space between inputs */
+  }
+  
+  .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center inputs horizontally */
+    padding: 20px; /* Add some padding to the container for spacing */
+    margin-top: 30px; /* Add top margin to push the inputs down */ /* Ensure the content area takes up full height */
+ /* Ensure it stays at the top */
+  }
+  
+  .banner {
+    position: relative; 
+    width: 100%;  
+    height: 350px; /* Set a height for the banner image */
+    overflow: hidden; /* Ensure the image doesn't overflow */
+    background-color: #eeb508;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+  }
+  
+  .banner img {
+    width: 100%;  /* Make the image take full width */
+    height: 100%;  /* Make the image take full height */ 
+    object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+    object-position: center; /* Centers the image within the container */
+  }
+
+  :root {
+    /** COLORES PRINCIPALES PERSONALIZADOS **/
+    --ion-color-primary: #eeb508;
+    --ion-color-primary-rgb: 74, 144, 226;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #3f7ec8;
+    --ion-color-primary-tint: #5aa0eb;
+  
+    --ion-color-secondary: #50e3c2;
+    --ion-color-secondary-rgb: 80, 227, 194;
+    --ion-color-secondary-contrast: #000000;
+    --ion-color-secondary-contrast-rgb: 0, 0, 0;
+    --ion-color-secondary-shade: #46cdae;
+    --ion-color-secondary-tint: #62e6c9;
+  
+    --ion-color-tertiary: #f5a623;
+    --ion-color-tertiary-rgb: 245, 166, 35;
+    --ion-color-tertiary-contrast: #000000;
+    --ion-color-tertiary-contrast-rgb: 0, 0, 0;
+    --ion-color-tertiary-shade: #d9951f;
+    --ion-color-tertiary-tint: #f6b13c;
+  
+    /** Otros colores **/
+    --ion-color-success: #2dd36f;
+    --ion-color-warning: #ffc409;
+    --ion-color-danger: #eb445a;
+    --ion-color-dark: #222428;
+    --ion-color-medium: #92949c;
+    --ion-color-light: #f4f5f8;
+  
+    /** Enlaces y texto destacados **/
+    --ion-color-link: #4a90e2;
+    --ion-highlight-color: var(--ion-color-primary);
+    --ion-toolbar-background: var(--ion-color-primary);
+    --ion-toolbar-color: var(--ion-color-primary-contrast);
+    --ion-text-color: #1e1e1e;
+    --ion-background-color: #ffffff;
+  }
+
+  .fondocarton {
+    background-image: url('/assets/images/fondo.jpeg'); /* Ruta relativa o absoluta */
+    background-size: cover;       /* Escala la imagen para cubrir todo el viewport */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-position: center;  /* Centra la imagen */
+  }
+
+  .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); // fondo semitransparente
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
