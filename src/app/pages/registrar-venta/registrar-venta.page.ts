@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductoService } from 'src/app/service/producto.service';
 import { VentaService } from 'src/app/service/venta.service';
 import { producto } from 'src/app/models/producto.models';
+import { AuthService } from 'src/app/service/auth.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-registrar-venta',
@@ -23,28 +25,43 @@ export class RegistrarVentaPage implements OnInit {
   iva = 0;
   montoTotal = 0;
 
+  usuarioCargado: boolean = false;  // Para saber si el usuario está listo
+
   constructor(
     private fb: FormBuilder,
     private productoService: ProductoService,
-    private ventaService: VentaService
+    private ventaService: VentaService,
+    private authService: AuthService
   ) {
     this.ventaForm = this.fb.group({
-      fecha: [new Date().toISOString().substring(0, 10), Validators.required],
+      fecha: [this.today, Validators.required],
       nro_boleta: [null, Validators.required],
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    // Esperamos que el estado de autenticación se valide y usuario se cargue
+    const autenticado = await firstValueFrom(this.authService.checkStatus());
+
+    if (!autenticado) {
+      alert('No estás autenticado. Por favor inicia sesión.');
+      // Aquí podrías redirigir a login si quieres
+      return;
+    }
+
+    console.log('Usuario cargado:', this.authService.user);
+    this.usuarioCargado = true;
+
+    // Cargar productos
     this.productoService.getProductos().subscribe((data) => {
       this.productos = data;
     });
 
-    this.generarBoleta().then((nro) => {
-      this.ventaForm.patchValue({ nro_boleta: nro });
-    });
+    // Generar número de boleta único
+    const nro = await this.generarBoleta();
+    this.ventaForm.patchValue({ nro_boleta: nro });
   }
 
-  // 🔄 Fecha
   toggleCalendario() {
     this.mostrarCalendario = !this.mostrarCalendario;
   }
@@ -59,21 +76,17 @@ export class RegistrarVentaPage implements OnInit {
     this.mostrarCalendario = false;
   }
 
-  // 🔎 Autocompletado
   filtrarProductos(termino: string) {
-    console.log('Buscando:', termino);
     this.productosFiltrados = this.productos.filter((p) =>
       p.nombre.toLowerCase().includes(termino.toLowerCase())
     );
   }
 
-  // ➕ Agregar producto
   agregarProducto(producto: producto) {
     const existente = this.productosVenta.find(p => p.productoId === producto.id);
 
     if (existente) {
       existente.cantidad++;
-      existente.montoTotal = existente.cantidad * existente.precioUnitario;
     } else {
       this.productosVenta.push({
         productoId: producto.id,
@@ -92,16 +105,12 @@ export class RegistrarVentaPage implements OnInit {
 
   incrementarCantidad(i: number) {
     this.productosVenta[i].cantidad++;
-    this.productosVenta[i].montoTotal =
-      this.productosVenta[i].cantidad * this.productosVenta[i].precioUnitario;
     this.actualizarTotales();
   }
 
   disminuirCantidad(i: number) {
     if (this.productosVenta[i].cantidad > 1) {
       this.productosVenta[i].cantidad--;
-      this.productosVenta[i].montoTotal =
-        this.productosVenta[i].cantidad * this.productosVenta[i].precioUnitario;
       this.actualizarTotales();
     }
   }
@@ -112,15 +121,30 @@ export class RegistrarVentaPage implements OnInit {
   }
 
   actualizarTotales() {
-    this.subMonto = this.productosVenta.reduce((sum, p) => sum + p.montoTotal, 0);
+    this.subMonto = this.productosVenta.reduce((sum, p) => sum + p.cantidad * p.precioUnitario, 0);
     this.iva = Math.round(this.subMonto * 0.19);
     this.montoTotal = this.subMonto + this.iva;
   }
 
   registrarVenta() {
+    if (!this.usuarioCargado) {
+      alert('Usuario no autenticado aún. Intenta de nuevo en unos segundos.');
+      return;
+    }
+
+    const currentUser = this.authService.user;
+
+    if (!currentUser) {
+      alert('No se pudo obtener el usuario autenticado');
+      return;
+    }
+
     const venta = {
       fecha: new Date(this.ventaForm.value.fecha),
       nro_boleta: this.ventaForm.value.nro_boleta,
+      subMonto: this.subMonto,
+      iva: this.iva,
+      montoTotal: this.montoTotal,
       ventaProductos: this.productosVenta.map((p) => ({
         productoId: p.productoId,
         cantidad: p.cantidad,
@@ -148,7 +172,7 @@ export class RegistrarVentaPage implements OnInit {
 
   async generarBoleta(): Promise<number> {
     let nroBoleta = Math.floor(100000 + Math.random() * 900000);
-    const ventas = (await this.ventaService.getVentas().toPromise()) ?? [];
+    const ventas = (await firstValueFrom(this.ventaService.getVentas())) ?? [];
 
     while (ventas.some(v => v.nro_boleta === nroBoleta)) {
       nroBoleta = Math.floor(100000 + Math.random() * 900000);
