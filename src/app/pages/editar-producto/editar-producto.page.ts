@@ -11,15 +11,15 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-editar-producto',
   templateUrl: './editar-producto.page.html',
   styleUrls: ['./editar-producto.page.scss'],
-  standalone:false,
+  standalone: false,
 })
 export class EditarProductoPage implements OnInit {
+  public imageFileList: FileList | undefined = undefined;
   productForm!: FormGroup;
   tempImages: string[] = [];
   productoEditando!: producto;
   public cargando: boolean = false;
   constructor(
-    
     private router: Router,
     private location: Location,
     private fb: FormBuilder,
@@ -37,6 +37,7 @@ export class EditarProductoPage implements OnInit {
       descripcion: ['', Validators.required],
       stock: [0, [Validators.required, Validators.min(1)]],
       precio: [0, [Validators.required, Validators.min(1)]],
+      images: [[]],
     });
 
     if (this.productoEditando) {
@@ -46,9 +47,10 @@ export class EditarProductoPage implements OnInit {
         descripcion: this.productoEditando.descripcion,
         stock: this.productoEditando.stock,
         precio: this.productoEditando.precio,
+        images: this.productoEditando.images,
       });
 
-      this.tempImages = [...(this.productoEditando.images || [])];
+      this.tempImages = this.productoEditando.images ?? [];
     }
   }
 
@@ -56,15 +58,16 @@ export class EditarProductoPage implements OnInit {
     this.location.back();
   }
 
-  onFilesChanged(event: any) {
-    const files: FileList = event.target.files;
-    for (let i = 0; i < files.length; i++) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.tempImages.push(reader.result as string);
-      };
-      reader.readAsDataURL(files[i]);
-    }
+  public onFilesChanged(event: Event) {
+    const fileList = (event.target as HTMLInputElement).files;
+
+    this.imageFileList = fileList ?? undefined;
+
+    const imagesUrls = Array.from(fileList ?? []).map((file) =>
+      URL.createObjectURL(file)
+    );
+
+    this.tempImages = imagesUrls;
   }
 
   removeImage(index: number) {
@@ -76,11 +79,13 @@ export class EditarProductoPage implements OnInit {
     if (this.productForm.invalid || this.tempImages.length === 0) {
       this.cargando = false;
       this.productForm.markAllAsTouched();
-      this.toastController.create({
-        message: 'Completa todos los campos correctamente.',
-        duration: 2000,
-        color: 'danger',
-      }).then(toast => toast.present());
+      this.toastController
+        .create({
+          message: 'Completa todos los campos correctamente.',
+          duration: 2000,
+          color: 'danger',
+        })
+        .then((toast) => toast.present());
       return;
     }
 
@@ -89,26 +94,31 @@ export class EditarProductoPage implements OnInit {
       images: this.tempImages,
     } as producto;
 
-    this.productoService.updateProducto(this.productoEditando.id, formData)
+    this.productoService
+      .updateProducto(this.productoEditando.id, formData)
       .subscribe({
         next: () => {
           this.cargando = false;
-          this.toastController.create({
-            message: 'Producto actualizado con éxito.',
-            duration: 2000,
-            color: 'success',
-          }).then(toast => toast.present());
+          this.toastController
+            .create({
+              message: 'Producto actualizado con éxito.',
+              duration: 2000,
+              color: 'success',
+            })
+            .then((toast) => toast.present());
 
           this.router.navigate(['/principal']);
         },
         error: () => {
           this.cargando = false;
-          this.toastController.create({
-            message: 'Error al actualizar el producto.',
-            duration: 2000,
-            color: 'danger',
-          }).then(toast => toast.present());
-        }
+          this.toastController
+            .create({
+              message: 'Error al actualizar el producto.',
+              duration: 2000,
+              color: 'danger',
+            })
+            .then((toast) => toast.present());
+        },
       });
   }
 }

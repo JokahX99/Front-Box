@@ -21,20 +21,19 @@ export interface CreateVentaDto {
 export class VentaService {
   private readonly _http = inject(HttpClient);
 
-  create(venta: CreateVentaDto): Observable<any> {
+  create(venta: CreateVentaDto) {
     return this._http.post(`${URL}/venta`, venta);
   }
 
-  getVentas(): Observable<any[]> {
+  getVentas() {
     return this._http.get<any[]>(`${URL}/venta`);
   }
 
-  getVenta(id: string): Observable<any> {
+  getVenta(id: string) {
     return this._http.get(`${URL}/venta/${id}`);
   }
 
-  eliminarVenta(id: string): Observable<any> {
+  eliminarVenta(id: string) {
     return this._http.delete(`${URL}/venta/${id}`);
   }
 }
-
