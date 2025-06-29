@@ -1,0 +1,21 @@
+h2 {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.barra-container {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  height: 16px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.barra {
+  height: 100%;
+  background-color: #d6a207; // Color de Ionic
+  transition: width 0.3s ease;
+}
